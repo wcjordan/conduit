@@ -81,8 +81,3 @@ Workflow `.github/workflows/ci.yml`, triggered on push and PR to `main`:
 5. Add one trivial unit test and one trivial widget test to confirm the test harness works end-to-end.
 6. Add GitHub Actions CI workflow; confirm it passes on a pushed branch/PR.
 7. Commit scaffolding, open PR (or push directly per current workflow) for review.
-
-## Open Questions
-
-- Confirm `com.flipperkid.conduit` as the package id (affects Play Store listing later if published) — proceeding with this as a placeholder default.
-- Min SDK API 24 assumed reasonable; revisit if targeting older devices matters.
