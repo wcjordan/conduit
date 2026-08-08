@@ -72,12 +72,31 @@ Workflow `.github/workflows/ci.yml`, triggered on push and PR to `main`:
 - No branch protection rules or PR templates — can revisit once collaboration needs arise.
 - No iOS/web/desktop platform setup, even though Flutter leaves the door open later.
 
-## Suggested Steps
+## Implementation Stages
 
-1. `flutter create` with chosen org/package id, strip to Android-only platform folder.
-2. Add dependencies (`flutter_riverpod`, `shared_preferences`, `flutter_lints`); configure `analysis_options.yaml`.
-3. Create feature-based folder skeleton (`lib/features/puzzle/...`, `lib/features/persistence/...`) with placeholder files as needed.
-4. Replace default counter-app boilerplate with a minimal placeholder screen (empty scaffold, app bar with "Conduit") to confirm the app builds/runs.
-5. Add one trivial unit test and one trivial widget test to confirm the test harness works end-to-end.
-6. Add GitHub Actions CI workflow; confirm it passes on a pushed branch/PR.
-7. Commit scaffolding, open PR (or push directly per current workflow) for review.
+Each stage is a separate branch off `scaffolding`, implemented and reviewed independently via a PR back into `scaffolding` (not `main`). Keeps each review small and each step buildable/runnable on its own. Suggested branch names below; merge order is sequential since later stages build on earlier ones.
+
+### Stage 1 — Project init & app identity (`scaffolding-01-init`)
+- `flutter create` with org `com.flipperkid`, package id `com.flipperkid.conduit`; strip to Android-only platform folder.
+- Set app display name to "Conduit" in Android manifest/build config.
+- Verify: default Flutter counter-app boilerplate builds and runs on device/emulator.
+
+### Stage 2 — Dependencies & lint/format config (`scaffolding-02-deps`)
+- Add `flutter_riverpod`, `shared_preferences`; dev dependency `flutter_lints`.
+- Add `analysis_options.yaml` extending `package:flutter_lints/flutter.yaml` (default rules).
+- Verify: `flutter pub get` and `flutter analyze` pass clean on the still-default app.
+
+### Stage 3 — Folder skeleton & placeholder screen (`scaffolding-03-structure`)
+- Create feature-based folder skeleton (`lib/features/puzzle/{models,logic,providers,widgets,screens}/`, `lib/features/persistence/`) with placeholder files as needed.
+- Replace default counter-app boilerplate with a minimal placeholder screen (empty scaffold, app bar reading "Conduit").
+- Verify: app builds/runs showing the placeholder screen instead of the counter demo.
+
+### Stage 4 — Test harness (`scaffolding-04-tests`)
+- Add one trivial unit test under `test/features/puzzle/logic/` and one trivial widget test under `test/features/puzzle/widgets/`, exercising the placeholder code from Stage 3.
+- Verify: `flutter test` runs and passes both.
+
+### Stage 5 — CI workflow (`scaffolding-05-ci`)
+- Add `.github/workflows/ci.yml`, triggered on push and PR to `main` (and to `scaffolding` while this branch is active): `flutter pub get` → `flutter analyze` → `flutter test` → `flutter build apk --debug`.
+- Verify: workflow passes on the PR itself.
+
+After Stage 5 merges into `scaffolding`, open a final PR from `scaffolding` into `main`.
