@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    # `scaffolding` is included while the scaffolding branch/stages are
+    # active; safe to drop once `scaffolding` is merged into `main` and
+    # deleted.
+    branches: [main, scaffolding]
+  pull_request:
+    branches: [main, scaffolding]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+
+      - run: flutter analyze
+
+      - run: flutter test
+
+      - run: flutter build apk --debug
