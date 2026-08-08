@@ -2,12 +2,9 @@ name: CI
 
 on:
   push:
-    # `scaffolding` is included while the scaffolding branch/stages are
-    # active; safe to drop once `scaffolding` is merged into `main` and
-    # deleted.
-    branches: [main, scaffolding]
+    branches: [main]
   pull_request:
-    branches: [main, scaffolding]
+    branches: [main]
 
 jobs:
   build:
